@@ -6,6 +6,7 @@ import { walletRouter } from "./api-gateway/routes/wallet.routes.js";
 import { transactionRouter } from "./api-gateway/routes/transaction.routes.js";
 
 import { errorHandler } from "./shared/middlewares/error-handler.js";
+import { routeNotFound } from "./shared/middlewares/route-not-found.js";
 
 export function createApp(): Express {
   const app: Express = express();
@@ -23,6 +24,7 @@ export function createApp(): Express {
   app.use("/api/wallets", walletRouter);
   app.use("/api/transactions", transactionRouter);
 
+  app.use(routeNotFound);
   app.use(errorHandler);
   return app;
 }
