@@ -26,7 +26,7 @@ export class ConnectionManager {
    *
    * `T` represents whatever value the transaction callback returns.
    */
-  async executeTransaction<T>(
+  async executeInTransaction<T>(
     shardId: ShardId,
     fn: (tx: Prisma.TransactionClient) => Promise<T>,
   ): Promise<T> {
