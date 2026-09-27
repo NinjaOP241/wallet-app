@@ -58,7 +58,7 @@ export function getShard2Client(): PrismaClient {
   return shard2Client;
 }
 
-export function getShardClient(shardId: ShardId): PrismaClient {
+export function getPrismaClient(shardId: ShardId): PrismaClient {
   return shardId === ShardId.SHARD_1 ? getShard1Client() : getShard2Client();
 }
 
