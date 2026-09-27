@@ -10,3 +10,17 @@ export interface Wallet {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export enum LedgerType {
+  DEBIT = "DEBIT",
+  CREDIT = "CREDIT",
+}
+
+export interface LedgerEntry {
+  id: bigint;
+  walletId: bigint;
+  transactionId: bigint;
+  amount: bigint;
+  type: LedgerType;
+  createdAt: Date;
+}
