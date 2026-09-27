@@ -10,7 +10,7 @@ import { LedgerType, LedgerEntry } from "../types/shared-types.js";
 export class LedgerRepository {
   async create(
     walletId: bigint,
-    transactionId: bigint,
+    transactionId: string,
     amount: bigint,
     type: LedgerType,
     tx: Prisma.TransactionClient,

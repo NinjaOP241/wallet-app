@@ -40,7 +40,6 @@ model Wallet {
   user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   outgoing_transactions Transaction[] @relation("FromWallet")
-  incoming_transactions Transaction[] @relation("ToWallet")
 
   ledger_entries Ledger[]
 
@@ -48,7 +47,7 @@ model Wallet {
 }
 
 model Transaction {
-  id              BigInt            @id @default(autoincrement()) @db.BigInt
+  id              String            @id @default(cuid())
   from_wallet_id  BigInt            @db.BigInt
   to_wallet_id    BigInt            @db.BigInt
   amount          BigInt            @db.BigInt
@@ -58,9 +57,6 @@ model Transaction {
   updated_at      DateTime          @updatedAt
 
   from_wallet Wallet @relation("FromWallet", fields: [from_wallet_id], references: [id], onDelete: Cascade)
-  to_wallet   Wallet @relation("ToWallet", fields: [to_wallet_id], references: [id], onDelete: Cascade)
-
-  ledger_entries Ledger[]
 
   @@index([from_wallet_id], name: "idx_from_wallet_id")
   @@index([to_wallet_id], name: "idx_to_wallet_id")
@@ -72,13 +68,12 @@ model Transaction {
 model Ledger {
   id             BigInt     @id @default(autoincrement()) @db.BigInt
   wallet_id      BigInt     @db.BigInt
-  transaction_id BigInt     @db.BigInt
+  transaction_id String   
   amount         BigInt     @db.BigInt
   type           LedgerType
   created_at     DateTime   @default(now())
 
   wallet      Wallet      @relation(fields: [wallet_id], references: [id], onDelete: Cascade)
-  transaction Transaction @relation(fields: [transaction_id], references: [id], onDelete: Cascade)
 
   @@index([wallet_id], name: "idx_wallet_id")
   @@index([transaction_id], name: "idx_transaction_id")
