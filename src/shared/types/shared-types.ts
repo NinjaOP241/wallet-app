@@ -24,3 +24,20 @@ export interface LedgerEntry {
   type: LedgerType;
   createdAt: Date;
 }
+
+export enum TransactionStatus {
+  PENDING = "PENDING",
+  DEBITED = "DEBITED",
+  CREDITED = "CREDITED",
+  FAILED = "FAILED",
+}
+
+export interface Transaction {
+  id: string;
+  fromWalletId: bigint;
+  toWalletId: bigint;
+  amount: bigint;
+  status: TransactionStatus;
+  idempotencyKey: string;
+  createdAt: Date;
+}
