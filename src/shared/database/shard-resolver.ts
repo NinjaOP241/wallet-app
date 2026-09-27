@@ -1,4 +1,4 @@
-import { ShardId } from "./../types/shared-types";
+import { ShardId } from "./../types/shared-types.js";
 
 export class ShardResolver {
   // Must be deterministic: the same userId should always map to the same shard.
