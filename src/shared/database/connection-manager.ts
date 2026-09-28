@@ -10,7 +10,7 @@ export class ConnectionManager {
    * to a specific shard's Prisma client.
    *
    */
-  static getClient(shardId: ShardId): PrismaClient {
+  getClient(shardId: ShardId): PrismaClient {
     return getPrismaClient(shardId);
   }
 

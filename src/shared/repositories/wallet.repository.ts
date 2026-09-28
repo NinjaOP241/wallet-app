@@ -2,13 +2,14 @@ import { Prisma, PrismaClient } from "../../../generated/prisma/client.js";
 import { Wallet } from "../types/shared-types.js";
 
 export class WalletRepository {
-  async create(userId: bigint, tx: Prisma.TransactionClient): Promise<Wallet> {
-    const walletEntity = await tx.wallet.create({
+  async create(userId: bigint, client: PrismaClient): Promise<Wallet> {
+    const walletEntity = await client.wallet.create({
       data: {
         user_id: userId,
         balance: BigInt(0),
       },
     });
+
     return this.mapToWallet(walletEntity);
   }
 
@@ -48,9 +49,9 @@ export class WalletRepository {
       FOR UPDATE;
     `;
 
-    if (walletEntities.length == 0) return null;
+    const walletEntity = walletEntities[0];
 
-    return this.mapToWallet(walletEntities[0]);
+    return walletEntity ? this.mapToWallet(walletEntity) : null;
   }
 
   async updateBalance(
@@ -68,32 +69,6 @@ export class WalletRepository {
     });
 
     return this.mapToWallet(updatedWallet);
-  }
-
-  async debit(
-    userId: bigint,
-    amount: bigint,
-    tx: Prisma.TransactionClient,
-  ): Promise<Wallet | null> {
-    const walletEntity = await this.findByUserIdWithLock(userId, tx);
-    if (!walletEntity) return null;
-
-    if (walletEntity.balance < amount) return null;
-
-    const newBalance = walletEntity.balance - amount;
-    return this.updateBalance(walletEntity.id, newBalance, tx);
-  }
-
-  async credit(
-    userId: bigint,
-    amount: bigint,
-    tx: Prisma.TransactionClient,
-  ): Promise<Wallet | null> {
-    const walletEntity = await this.findByUserIdWithLock(userId, tx);
-    if (!walletEntity) return null;
-
-    const newBalance = walletEntity.balance + amount;
-    return this.updateBalance(walletEntity.id, newBalance, tx);
   }
 
   private mapToWallet(walletEntity: Prisma.WalletGetPayload<{}>): Wallet {
