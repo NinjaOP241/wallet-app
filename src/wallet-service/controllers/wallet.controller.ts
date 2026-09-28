@@ -2,9 +2,7 @@ import { Request, Response } from "express";
 import { Wallet } from "./../../shared/types/shared-types.js";
 import { WalletService } from "../services/wallet.service.js";
 import {
-  AddMoneyDTO,
   AddMoneyParamsDTO,
-  CreateWalletDTO,
   GetWalletParamsDTO,
   WalletResponseDTO,
 } from "../../shared/dto/wallet.dto.js";
