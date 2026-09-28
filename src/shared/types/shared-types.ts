@@ -19,7 +19,7 @@ export enum LedgerType {
 export interface LedgerEntry {
   id: bigint;
   walletId: bigint;
-  transactionId: String;
+  transactionId: string | null;
   amount: bigint;
   type: LedgerType;
   createdAt: Date;

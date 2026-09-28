@@ -83,8 +83,8 @@ export class WalletService {
    * independent of the transfer Saga. The wallet row is pessimistically
    * locked before updating the balance.
    *
-   * If a transaction ID is provided, a CREDIT ledger entry is created
-   * in the same database transaction.
+    * A CREDIT ledger entry without a transaction ID is created in the
+  * same database transaction.
    *
    * STEPS:
    * 1. Validate that the amount is positive
@@ -93,19 +93,14 @@ export class WalletService {
    * 4. Lock the wallet row using SELECT ... FOR UPDATE
    * 5. Verify that the wallet exists
    * 6. Increase the wallet balance
-   * 7. Create a CREDIT ledger entry if a transaction ID is provided
+    * 7. Create a CREDIT ledger entry with a null transaction ID
    * 8. Commit the transaction
    *
    * @param userId - The ID of the user whose wallet is credited.
    * @param amount - The amount to add to the wallet.
-   * @param transactionId - Optional transaction ID associated with the deposit.
    * @returns The updated wallet.
    */
-  async addMoney(
-    userId: bigint,
-    amount: bigint,
-    transactionId?: string,
-  ): Promise<Wallet> {
+  async addMoney(userId: bigint, amount: bigint): Promise<Wallet> {
     this.validateAmount(amount);
 
     const shardId = ShardResolver.getShardId(userId);
@@ -125,15 +120,13 @@ export class WalletService {
         tx,
       );
 
-      if (transactionId) {
-        await this.ledgerRepository.create(
-          wallet.id,
-          transactionId,
-          amount,
-          LedgerType.CREDIT,
-          tx,
-        );
-      }
+      await this.ledgerRepository.create(
+        wallet.id,
+        null,
+        amount,
+        LedgerType.CREDIT,
+        tx,
+      );
 
       return updatedWallet;
     });
