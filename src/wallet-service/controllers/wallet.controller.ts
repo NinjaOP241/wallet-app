@@ -19,7 +19,7 @@ export class WalletController {
   }
 
   async createWallet(
-    req: Request<{}, unknown, CreateWalletDTO>,
+    req: Request,
     res: Response,
   ): Promise<void> {
     const wallet = await this.walletService.createWallet(req.body.userId);
@@ -29,10 +29,11 @@ export class WalletController {
   }
 
   async getWallet(
-    req: Request<GetWalletParamsDTO>,
+    req: Request,
     res: Response,
   ): Promise<void> {
-    const wallet = await this.walletService.getWallet(req.params.userId);
+    const params = req.validated.params as GetWalletParamsDTO;
+    const wallet = await this.walletService.getWallet(params.userId);
 
     if (!wallet) throw notFound("Wallet not found");
 
@@ -41,11 +42,12 @@ export class WalletController {
   }
 
   async addMoney(
-    req: Request<AddMoneyParamsDTO, unknown, AddMoneyDTO>,
+    req: Request,
     res: Response,
   ): Promise<void> {
+    const params = req.validated.params as AddMoneyParamsDTO;
     const wallet = await this.walletService.addMoney(
-      req.params.userId,
+      params.userId,
       req.body.amount,
     );
 
