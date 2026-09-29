@@ -10,6 +10,7 @@ import {
   createWalletSchema,
   getWalletParamsSchema,
 } from "../../shared/dto/wallet.dto.js";
+import { idempotencyMiddleware } from "../../shared/middlewares/idempotency.js";
 
 export const walletRouter: Router = Router();
 const walletController = new WalletController();
@@ -26,6 +27,7 @@ walletRouter.get(
 );
 walletRouter.post(
   "/:userId/add-money",
+  idempotencyMiddleware(),
   validateParams(addMoneyParamsSchema),
   validateBody(addMoneySchema),
   walletController.addMoney.bind(walletController),

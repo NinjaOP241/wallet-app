@@ -23,3 +23,5 @@ export const forbidden = (message: string, details?: unknown) =>
   new ApiError(403, message, details);
 export const conflict = (message: string, details?: unknown) =>
   new ApiError(409, message, details);
+export const unprocessableEntity = (message: string, details?: unknown) =>
+  new ApiError(422, message, details);
