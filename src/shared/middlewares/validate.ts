@@ -21,7 +21,7 @@ export const validateParams = (schema: z.ZodType) => {
     if (!result.success) {
       throw badRequest("Validation failed", result.error.issues);
     }
-    req.validated.params = result.data;
+    req.validatedParams = result.data;
     next();
   };
 };
