@@ -34,8 +34,8 @@ export enum TransactionStatus {
 
 export interface Transaction {
   id: string;
-  fromWalletId: bigint;
-  toWalletId: bigint;
+  fromUserId: bigint;
+  toUserId: bigint;
   amount: bigint;
   status: TransactionStatus;
   idempotencyKey: string;

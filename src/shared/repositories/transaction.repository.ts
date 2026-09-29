@@ -3,16 +3,16 @@ import { TransactionStatus, Transaction } from "../types/shared-types.js";
 
 export class TransactionRepository {
   async create(
-    fromWalletId: bigint,
-    toWalletId: bigint,
+    fromUserId: bigint,
+    toUserId: bigint,
     amount: bigint,
     idempotencyKey: string,
     tx: Prisma.TransactionClient,
   ): Promise<Transaction> {
     const transactionEntity = await tx.transaction.create({
       data: {
-        from_wallet_id: fromWalletId,
-        to_wallet_id: toWalletId,
+        from_user_id: fromUserId,
+        to_user_id: toUserId,
         amount,
         idempotency_key: idempotencyKey,
       },
@@ -62,11 +62,11 @@ export class TransactionRepository {
   }
 
   /**
-   * Get the transaction history for a given wallet across two shards.
-   * Check both shards for transactions where the wallet is either the sender or the receiver.
+   * Get the transaction history for a user across two shards.
+   * Check both shards for transfers where the user is either the sender or receiver.
    */
   async getHistory(
-    walletId: bigint,
+    userId: bigint,
     client1: PrismaClient,
     client2: PrismaClient,
   ): Promise<Transaction[]> {
@@ -74,7 +74,7 @@ export class TransactionRepository {
       [client1, client2].map((client) =>
         client.transaction.findMany({
           where: {
-            OR: [{ from_wallet_id: walletId }, { to_wallet_id: walletId }],
+            OR: [{ from_user_id: userId }, { to_user_id: userId }],
           },
         }),
       ),
@@ -91,8 +91,8 @@ export class TransactionRepository {
   ): Transaction {
     return {
       id: transactionEntity.id,
-      fromWalletId: transactionEntity.from_wallet_id,
-      toWalletId: transactionEntity.to_wallet_id,
+      fromUserId: transactionEntity.from_user_id,
+      toUserId: transactionEntity.to_user_id,
       amount: transactionEntity.amount,
       status: transactionEntity.status as TransactionStatus,
       idempotencyKey: transactionEntity.idempotency_key,

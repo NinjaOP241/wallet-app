@@ -41,16 +41,16 @@ model Wallet {
 
 model Transaction {
   id              String            @id @default(cuid())
-  from_wallet_id  BigInt            @db.BigInt
-  to_wallet_id    BigInt            @db.BigInt
+  from_user_id    BigInt            @db.BigInt
+  to_user_id      BigInt            @db.BigInt
   amount          BigInt            @db.BigInt
   status          TransactionStatus @default(PENDING)
   idempotency_key String            @unique @db.VarChar(255)
   created_at      DateTime          @default(now())
   updated_at      DateTime          @updatedAt
 
-  @@index([from_wallet_id], name: "idx_from_wallet_id")
-  @@index([to_wallet_id], name: "idx_to_wallet_id")
+  @@index([from_user_id], name: "idx_from_user_id")
+  @@index([to_user_id], name: "idx_to_user_id")
   @@index([status], name: "idx_status")
   @@index([idempotency_key], name: "idx_idempotency_key")
   @@map("transactions")
